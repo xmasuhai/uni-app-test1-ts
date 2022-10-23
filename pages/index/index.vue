@@ -1,9 +1,13 @@
 <template>
 	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">{{title}}</text>
-		</view>
+		<navigator class="text-area"
+							 :url="`/pages/article/article?id=${item.id}`"
+							  v-for="item in news"
+							 :key="item.id">
+			<view>
+				<text class="title">{{item.title}}</text>
+			</view>
+		</navigator>
 	</view>
 </template>
 
@@ -11,11 +15,21 @@
 	export default {
 		data() {
 			return {
-				title: 'Hello'
+				news: [
+					// {id: '1', title: '新闻1'},
+				]
 			}
 		},
 		onLoad() {
-
+			uni.request({
+				url: '/newslist',
+				success: ({ // 异步必须用箭头函数
+					data
+				}) => {
+					// console.log(data.news)
+					this.news = data.news
+				}
+			})
 		},
 		methods: {
 
@@ -23,21 +37,12 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.content {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-	}
-
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50rpx;
 	}
 
 	.text-area {
@@ -47,6 +52,7 @@
 
 	.title {
 		font-size: 36rpx;
+		padding: 30rpx;
 		color: #8f8f94;
 	}
 </style>
